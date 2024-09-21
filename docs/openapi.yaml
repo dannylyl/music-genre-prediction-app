@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: Music Genre Prediction API
+  description: API for predicting music genres based on uploaded track metadata in completion of the DBS ML Engineering Take Home Assessment.
+  version: 1.0.0
+
+servers:
+  # - url: http://127.0.0.1:8000
+  #   description: Local development server
+  - url: http://0.0.0.0:80
+    description: Docker container
+paths:
+  /predict/:
+    post:
+      summary: Predict music genres for a batch of tracks
+      description: Upload a CSV file containing track metadata to receive genre predictions. For this assignment, please use the provided `test.csv` file. This should be called before /genres/ and /titles/{genre} to populate the sqlite database first.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The CSV file containing the track metadata.
+      responses:
+        '200':
+          description: Successful genre prediction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  predictions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        track_id:
+                          type: string
+                          description: The ID of the track.
+                        title:
+                          type: string
+                          description: The title of the track.
+                        predicted_genre:
+                          type: string
+                          description: The predicted genre for the track.
+        '400':
+          description: Bad request, invalid input data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description:
+
+  /genres/:
+    get:
+      summary: Get list of distinct genres
+      description: Retrieve a list of all distinct genres that have been predicted and stored in the sqlite database.
+      responses:
+        '200':
+          description: List of distinct genres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: A distinct genre.
+
+  /titles/{genre}:
+    get:
+      summary: Get titles by genre
+      description: Retrieve a list of titles for a given genre from the sqlite database.
+      parameters:
+        - in: path
+          name: genre
+          required: true
+          schema:
+            type: string
+          description: The genre to filter titles by.
+      responses:
+        '200':
+          description: List of titles for the specified genre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: A title of a track belonging to the specified genre.

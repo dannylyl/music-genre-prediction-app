@@ -1,0 +1,33 @@
+random_state: 42
+
+inference_mode: false
+
+genre_mapping:
+  0: 'Classic Pop and Rock'
+  1: 'Dance and Electronica'
+  2: 'Folk'
+  3: 'Jazz and Blues'
+  4: 'Metal'
+  5: 'Pop'
+  6: 'Punk'
+  7: 'Soul and Reggae'
+
+datapreparation:
+  word_embedding_size: 100
+  embedding_window: 5
+  embedding_min_count: 1
+  skipgram: 0
+
+datapreprocessing:
+  test_size: 0.2
+  random_state: 42
+  batch_size: 32
+  inference_mode: ${inference_mode}
+
+model:
+  input_size: 370
+  hidden_size: 8
+  num_fc_layers: 1
+  output_size: 8
+  epochs: 200
+  lr: 0.001
